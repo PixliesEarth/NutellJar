@@ -1,0 +1,89 @@
+/**
+* NUTELLAJAR STANDARD LIBRARY
+*/
+
+struct socket {
+
+    char* host;
+    U8 port;
+
+    method connect takesin (char* host, U8 port) returns char* {
+        try {
+            U0 connection = out>>0x80>>host>>port;
+            return in<<0x80;
+        } catch {
+            terminal.write("Error while connecting to "host":"port"! " + error.message);
+        }
+    }
+
+}
+
+struct terminal {
+
+    #constructor <U8|F16>
+
+    U8 fontColor = this.color.WHITE;
+    U8 backgroundColor = this.color.BLACK;
+    U8 cursorX = 0;
+    U8 cursorY = 0;
+    U32 rows = 420;
+    U32 collumns = 640;
+
+    method write takesin (char* message) {
+        in<<cursorX<<cursorY<<4+message;
+    }
+
+    method setCursor takesin (U8 X, U8 Y) {
+        cursorX = x;
+        cursorY = Y;
+    }
+
+    enum<char*> waitFor {
+
+        ANSWER {
+            char* input = "";
+            while (!input.endsWith("\n") {
+                char key = IO.InputManager.currentKeyChar;
+                if (isAlNum(key))
+                    input += key;
+            }
+            return input;
+        },
+        ALNUMKEYIN {
+            #region ask:
+                char key = IO.InputManager.currentKeyChar;
+                if (!isAlnum(key))
+                    jump(ask);
+            return key;
+        },
+        KEYBOARDIN {
+            #region ask:
+                char key = IO.InputManager.currentKeyChar;
+                if (key == Data.NULLPOINTER) {
+                    jump(ask);
+           return key;
+        };
+    }
+
+    enum<U8> color {
+        WHITE { return 0xffffff; },
+        BLACK { return 0x000000; },
+        RED { return 0xff0000; },
+        BLUE { return 0x0000ff; },
+        YELLOW { return 0xffff00; },
+        GREEN { return 0x008000; };
+    }
+
+}
+
+struct fs {
+
+    #constructor <F16>
+
+    char[] volumes = F16;
+
+    method save takesin (file toSave, char volume) {
+        volume.name>>toSave;
+    }
+
+}

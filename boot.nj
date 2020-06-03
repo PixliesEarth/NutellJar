@@ -1,0 +1,41 @@
+#include <NJDEF.nj>
+#define priority=HIGHEST;
+
+// NUTELLAJAR BOOTLOADER
+method init takesin (char* arg) {
+
+    U8 index = Data.NULLPOINTER;
+
+    const version = "1.0";
+
+    terminal.backgroundColor = terminal.color.WHITE;
+    terminal.fontColor = terminal.color.BLACK;
+    for (U32 i = 0; i < terminal.collumns - 1; i += 1) {
+        terminal.write(" ");
+    }
+    terminal.setCursor(3, 0);
+    terminal.write("NutellaJar Bootloader version $version");
+    terminal.backgroundColor = terminal.color.BLACK;
+    terminal.fontColor = terminal.color.WHITE;
+    terminal.write("\n");
+    for (char vol in fs.volumes)
+        terminal.write(vol.whereAt + ". " + vol);
+
+    while (index == Data.NULLPOINTER) {
+        char key = terminal.waitFor.KEYBOARDIN;
+        if (isNum(key) && key != Data.NULLPOINTER) {
+            index = key>>U8;
+            boot(fs.volumes[index]);
+        } else {
+            terminal.fontColor = terminal.color.RED;
+            terminal.write("ERROR! Invalid partition.");
+        }
+    }
+
+}
+
+method boot takesin (char volume) returns Future<void> {
+
+    if ();
+
+}
