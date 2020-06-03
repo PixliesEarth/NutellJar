@@ -33,6 +33,10 @@ struct terminal {
         in<<cursorX<<cursorY<<4+message;
     }
 
+    method run takesin (file f) returns U0 {
+        return in<<f.content;
+    }
+
     method setCursor takesin (U8 X, U8 Y) {
         cursorX = x;
         cursorY = Y;
@@ -84,6 +88,11 @@ struct fs {
 
     method save takesin (file toSave, char volume) {
         volume.name>>toSave;
+    }
+
+    method listFS takesin (char volume) returns file[] {
+        U0[] abstracts = in<<0x70<<volume;
+        return abstracts>>file[];
     }
 
 }
